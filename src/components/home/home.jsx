@@ -1,10 +1,39 @@
 "use client"
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AirplaneInFlight,AirplaneLanding  } from '@phosphor-icons/react';
 import Link from 'next/link';
+import { supabase } from '@/utils/supabase';
+import { useRouter } from 'next/navigation'
+
 const Tiket = () => {
   const [returnDateEnabled, setReturnDateEnabled] = useState(false);
+
+  const [dari, setDari] = useState('');
+  const [ke, setKe] = useState('');
+
+  //agar ketika screen diakses, langsung memanggil getdata
+  const handleSearch = async () => {
+    // Lakukan pencarian data di Supabase
+    const { data, error } = await supabase
+      .from('tickets')
+      .select('departure, arrival, departure_at,')
+      .eq('dari', dari)
+      .eq('ke', ke);
+
+      console.log("Data Tiket Pesawat:", data);
+
+  
+    // Navigasi ke halaman lain dengan hasil pencarian
+    if (data) {
+      // Contoh menggunakan router Next.js, sesuaikan dengan library navigasi yang Anda gunakan
+      router.push({
+        pathname: '/detail',
+        query: { data: JSON.stringify(data) },
+      });
+    }
+  };
+  
 
   return (
     <>
@@ -14,13 +43,14 @@ const Tiket = () => {
 
         {/* Form Pencarian */}
         <form className="my-8 mx-10">
+          
           <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
 
             <div className="flex-grow relative">
               <label htmlFor="from" className="block text-sm font-medium text-gray-600">Dari</label>
               <div className='flex items-center'>
                 <AirplaneInFlight size={24} className="absolute text-gray-500 top-1/2 left-2 mt-2  transform -translate-y-1/2"/>
-              <input type="text" id="from" name="from" className="pl-8 pr-2 py-2 w-full border rounded-md" placeholder='Jakarta'/>
+              <input type="text" id="from" name="from" value={dari} onChange={(e) => setDari(e.target.value)} className="pl-8 pr-2 py-2 w-full border rounded-md" placeholder='Jakarta'/>
               </div>
             </div>
 
@@ -28,7 +58,7 @@ const Tiket = () => {
               <label htmlFor="to" className="block text-sm font-medium text-gray-600">Ke</label>
               <div className='flex items-center'>
                 <AirplaneLanding  size={24} className="absolute text-gray-500 top-1/2 left-2 mt-2  transform -translate-y-1/2"/>
-              <input type="text" id="from" name="from" className="pl-8 pr-2 py-2 w-full border rounded-md" placeholder='Surabaya'/>
+              <input type="text" id="from" name="from" value={ke} onChange={(e) => setKe(e.target.value)} className="pl-8 pr-2 py-2 w-full border rounded-md" placeholder='Surabaya'/>
               </div>
             </div>
 
@@ -67,9 +97,9 @@ const Tiket = () => {
             </div>
           </div>
           <div className='flex-grow'>
-              <Link href={'/detail'}>
-              <button type="submit" className="bg-primary hover:scale-105 text-white p-2 rounded-md mt-5">Cari Tiket</button>
-              </Link>
+              {/* <Link href={'/detail'}> */}
+              <button type="submit" onClick={handleSearch} className="bg-primary hover:scale-105 text-white p-2 rounded-md mt-5">Cari Tiket</button>
+              
             </div>
         </form>
 
