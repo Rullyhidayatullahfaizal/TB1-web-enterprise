@@ -18,6 +18,9 @@ module.exports = {
         "raisin-black": "#2E282A",
         cinereous: "#92817A",
       },
+      maxHeight: {
+        '128': '50rem',
+      },
     },
   },
   plugins: [],

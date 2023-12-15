@@ -1,0 +1,119 @@
+"use client";
+
+const Tiket = () => {
+  return (
+    <>
+      <div className="bg-gray-100 font-sans">
+        <div className="container mx-auto mt-8 p-4 bg-white rounded shadow-md">
+          <h1 className="text-2xl font-bold mb-4 text-center">Pemesanan Tiket Pesawat</h1>
+
+          {/* <!-- Form Pencarian --> */}
+          <div className="mb-8 mt-11">
+            <form className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
+              <div className="flex-grow">
+                <label
+                  for="from"
+                  className="block text-sm font-medium text-gray-600"
+                >
+                  Dari
+                </label>
+                <input
+                  type="text"
+                  id="from"
+                  name="from"
+                  className="mt-1 p-2 w-full border rounded-md"
+                />
+              </div>
+
+              <div className="flex-grow">
+                <label for="to" className="block text-sm font-medium text-gray-600">
+                  Ke
+                </label>
+                <input
+                  type="text"
+                  id="to"
+                  name="to"
+                  className="mt-1 p-2 w-full border rounded-md"
+                />
+              </div>
+
+              
+              <div className="flex-grow">
+                <label for="to" className="block text-sm font-medium text-gray-600">
+                  jumlah penumpang
+                </label>
+                <input
+                  type="text"
+                  id="to"
+                  name="to"
+                  className="mt-1 p-2 w-full border rounded-md"
+                />
+              </div>
+
+              <div className="flex-grow">
+                <label for="to" className="block text-sm font-medium text-gray-600">
+                  kelas ekonomi 
+                </label>
+                <input
+                  type="text"
+                  id="to"
+                  name="to"
+                  className="mt-1 p-2 w-full border rounded-md"
+                />
+              </div>
+
+              <div className="flex-grow">
+                <label
+                  for="departure"
+                  className="block text-sm font-medium text-gray-600"
+                >
+                  Keberangkatan
+                </label>
+                <input
+                  type="date"
+                  id="departure"
+                  name="departure"
+                  className="mt-1 p-2 w-full border rounded-md"
+                />
+              </div>
+
+              <div className="flex-grow">
+                <label
+                  for="return"
+                  className="block text-sm font-medium text-gray-600"
+                >
+                  Pulang
+                </label>
+                <input
+                  type="date"
+                  id="return"
+                  name="return"
+                  className="mt-1 p-2 w-full border rounded-md"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="bg-blue-500 text-white p-2 rounded-md"
+              >
+                Cari Tiket
+              </button>
+            </form>
+          </div>
+
+          {/* <!-- Hasil Pencarian --> */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {/* <!-- Tambahkan hasil pencarian tiket pesawat di sini --> */}
+          </div>
+
+          {/* <!-- Ringkasan Pemesanan --> */}
+          <div className="mt-8">
+            {/* <!-- Tambahkan ringkasan pemesanan di sini --> */}
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default Tiket;
