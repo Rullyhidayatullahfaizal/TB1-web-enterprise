@@ -4,7 +4,13 @@ import CardDetail from "@/components/detail/card";
 import Image from "next/image";
 import DaftarPenerbangan from "./daftar-penerbangan";
 
+import { useRouter, useSearchParams } from "next/navigation";
+
 const Page = () => {
+
+  const searchParams = useSearchParams();
+  const tipe = searchParams.get('tipe');
+
   return (
     <>
       <div className="mb-7">
@@ -17,7 +23,7 @@ const Page = () => {
           <div className="flex flex-col w-3/4 border border-cinereous rounded max-h-[48rem]  overflow-y-scroll scrollbar-none ">
             <div className="">
               <h2 className="text-xl font-semibold  px-4 pt-4">
-                List Tiket yang tersedia pada jalur Jakarta - Surabaya
+                List Tiket yang tersedia pada jalur :{tipe}
               </h2>
             </div>
             <div className="flex-col w-full p-4 ">

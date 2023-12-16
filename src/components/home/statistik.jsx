@@ -58,6 +58,7 @@ const Statistik = () => {
       },
     ],
   };
+
   return (
     <>
     <div >

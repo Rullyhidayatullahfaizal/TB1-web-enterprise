@@ -21,7 +21,7 @@ const Navbar = () => {
         <Link href="/my-booking" className="py-1 text-primary">
           Pesanan
         </Link>
-        <Link href="/login" className="border text-gray-700 rounded px-5 py-1">
+        <Link href="/login" className="border text-gray-700 rounded px-5 py-1 hover:bg-primary hover:text-gray-50">
           <button>Login</button>
         </Link>
         <Link href="/register" className="bg-primary rounded text-gray-50  px-5 py-1">

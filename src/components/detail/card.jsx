@@ -1,21 +1,33 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FlightDetailsModal from "./pesan";
-
+import { supabase } from "@/utils/supabase";
+import { useSearchParams } from "next/navigation";
 const CardDetail = () => {
+  const [list, setList] = useState([]);
+  const [modalFlightDetails, setModalFlightDetails] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const flightDetails = {
-    id: 1,
-    pesawat: "Garuda Indonesia",
-    stock: 10,
-    destination: "Bali",
-    departure_at: "2023-12-31 08:00",
-    baggage: "20kg",
-    cabin: "Economy Class",
-    created_at: "2023-12-01 12:00",
+  const params = useSearchParams();
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const getData = async () => {
+    const { data } = await supabase
+      .from("tickets")
+      .select(
+        `departure,departure_airport,arrival,arrival_airport,flight,baggage,cabin,departure_at,arrival_estimation_at,stok,id`
+      )
+      .eq("departure", params.get("departure"))
+      .eq("arrival", params.get("arrival"));
+    console.log(data);
+
+    setList(data);
   };
 
-  const openModal = () => {
+  const openModal = (selectedFlightDetails) => {
     setIsModalOpen(true);
+    setModalFlightDetails(selectedFlightDetails);
   };
 
   const closeModal = () => {
@@ -23,23 +35,48 @@ const CardDetail = () => {
   };
 
   return (
-    <div className="bg-white p-4 rounded-md shadow-md mb-4 border hover:border-cinereous">
-      <h3 className="text-lg font-semibold mb-2">Penerbangan 1 :ASF35F</h3>
-      <p className="text-sm">Jam: 08:00</p>
-      <div className="flex justify-between items-center">
-        <div>
-          <p className="text-sm">Harga: $200</p>
-        </div>
-        <div className="flex gap-2">
-          <button className="bg-blue-500 px-4 py-1 rounded text-white">Booking</button>
-          {/* tombol bayar diluar */}
-          <button className="bg-blue-500 px-4 py-1 rounded text-white" onClick={openModal}>
-            Bayar
-          </button>
-        </div>
-      </div>
-      <FlightDetailsModal isOpen={isModalOpen} onClose={closeModal} flightDetails={flightDetails} />
-    </div>
+    <>
+      {list &&
+        list.map((row, index) => (
+          <div
+            key={index}
+            className="bg-white p-4 rounded-md shadow-md mb-4 border hover:border-cinereous"
+          >
+            <h3 className="text-lg font-semibold  mb-2">
+              Penerbangan :<span className="text-primary">{row.flight}</span>
+            </h3>
+            <p className="text-sm my-2">
+              Keberangatan :{new Date(row.departure_at).toLocaleString()}
+            </p>
+            <p className="text-sm">
+              kedatangan :{" "}
+              {new Date(row.arrival_estimation_at).toLocaleString()}
+            </p>
+            <div className="flex justify-between items-center">
+              <div>
+                <p className="text-sm">Harga: $200</p>
+              </div>
+              <div className="flex gap-2">
+                <button className="bg-blue-500 px-4 py-1 rounded text-white">
+                  Booking
+                </button>
+                {/* tombol bayar diluar */}
+                <button
+                  className="bg-blue-500 px-4 py-1 rounded text-white"
+                  onClick={() => openModal(row)}
+                >
+                  Bayar
+                </button>
+              </div>
+            </div>
+            <FlightDetailsModal
+              isOpen={isModalOpen}
+              onClose={closeModal}
+              flightDetails={modalFlightDetails}
+            />
+          </div>
+        ))}
+    </>
   );
 };
 

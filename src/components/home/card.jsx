@@ -5,20 +5,20 @@ const WisataCard = () => {
     <>
     <div className="px-3 pt-5">
       <div>
-        <h2 className="text-center pt-7 font-semibold text-3xl mb-7 text-secondary">
+        <h2 className="text-center pt-7 font-semibold text-2xl mb-7 text-secondary">
           Rekomendasi Wisata Terbaik
         </h2>
       </div>
-      <div className="grid grid-cols-2 gap-6 md:">
-        <div className="flex flex-col">
-          <div className="relative flex flex-col md:flex-row md:space-x-5 space-y-3 md:space-y-0 rounded-xl shadow-lg p-3 max-w-xs md:max-w-3xl mx-auto border border-white bg-white">
+      <div className="grid grid-cols-2 gap-6 mx-10 md:">
+        <div className="flex flex-col ">
+          <div className="relative flex flex-col md:flex-row md:space-x-5 space-y-3 md:space-y-0 rounded-xl shadow-lg p-3 max-w-xs md:max-w-3xl mx-auto border border-white bg-white hover:border-secondary  cursor-pointer">
             <div className="w-full md:w-1/3 bg-white grid place-items-center">
               <Image
                 src="/img/PAPUA.jpg"
                 width={450}
                 height={950}
                 alt="tailwind logo"
-                className="rounded-xl object-cover object-top h-full"
+                className="rounded-xl object-cover object-top h-full "
               />
             </div>
             <div className="w-full md:w-2/3 bg-white flex flex-col space-y-2 p-3">
@@ -76,7 +76,7 @@ const WisataCard = () => {
           </div>
         </div>
         <div className="flex flex-col ">
-          <div className="relative flex flex-col md:flex-row md:space-x-5 space-y-3 md:space-y-0 rounded-xl shadow-lg p-3 max-w-xs md:max-w-3xl mx-auto border border-white bg-white">
+          <div className="relative flex flex-col md:flex-row md:space-x-5 space-y-3 md:space-y-0 rounded-xl shadow-lg p-3 max-w-xs md:max-w-3xl mx-auto border border-white bg-white  hover:border-secondary cursor-pointer">
             <div className="w-full md:w-1/3 bg-white grid place-items-center">
               <Image
                 src="/img/BROBUDUR.jpg"
@@ -141,7 +141,7 @@ const WisataCard = () => {
           </div>
         </div>
         <div className="flex flex-col ">
-          <div className="relative flex flex-col md:flex-row md:space-x-5 space-y-3 md:space-y-0 rounded-xl shadow-lg p-3 max-w-xs md:max-w-3xl mx-auto border border-white bg-white">
+          <div className="relative flex flex-col md:flex-row md:space-x-5 space-y-3 md:space-y-0 rounded-xl shadow-lg p-3 max-w-xs md:max-w-3xl mx-auto border border-white bg-white  hover:border-secondary cursor-pointer">
             <div className="w-full md:w-1/3 bg-white grid place-items-center">
               <Image
                 src="/img/KOMODO.jpg"
@@ -206,7 +206,7 @@ const WisataCard = () => {
           </div>
         </div>
         <div className="flex flex-col ">
-          <div className="relative flex flex-col md:flex-row md:space-x-5 space-y-3 md:space-y-0 rounded-xl shadow-lg p-3 max-w-xs md:max-w-3xl mx-auto border border-white bg-white">
+          <div className="relative flex flex-col md:flex-row md:space-x-5 space-y-3 md:space-y-0 rounded-xl shadow-lg p-3 max-w-xs md:max-w-3xl mx-auto border border-white bg-white  hover:border-secondary cursor-pointer">
             <div className="w-full md:w-1/3 bg-white grid place-items-center">
               <Image
                 src="/img/BALI.jpg"

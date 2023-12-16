@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-const Footer = () => {
+const FooterHome = () => {
   return (
     <>
       {/* // <!-- component --> */}

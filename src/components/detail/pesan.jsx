@@ -27,12 +27,12 @@ const FlightDetailsModal = ({ isOpen, onClose, flightDetails }) => {
       <div>
         <h2 className="text-xl font-bold mb-4 border-b pb-2 border-solid border-blue-200">Resume Flight:</h2>
         <div className="space-y-6 mb-5 flex flex-col ">
-          <p className="">Pesawat : {flightDetails.pesawat}</p>
-          <p>Stock : {flightDetails.stock}</p>
-          <p>Destination : {flightDetails.destination}</p>
-          <p>Departure At : {flightDetails.departure_at}</p>
-          <p>Baggage : {flightDetails.baggage}</p>
-          <p>Cabin : {flightDetails.cabin}</p>
+          <p className="">Pesawat : {flightDetails?.flight}</p>
+          <p>Stock : {flightDetails?.stok}</p>
+          <p>Destination : {flightDetails?.arrival}</p>
+          <p>Departure At : {flightDetails?.departure_at}</p>
+          <p>Baggage : {flightDetails?.baggage}</p>
+          <p>Cabin : {flightDetails?.cabin}</p>
         </div>
       </div>
       <p className="font-semibold text-xl">Are you sure about ordering the tickets ?</p>
