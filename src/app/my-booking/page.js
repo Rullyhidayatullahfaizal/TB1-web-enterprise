@@ -54,7 +54,7 @@ export default function Page() {
         </div>
 
         {/* right */}
-        <div className="col-span-2 flex flex-col">
+        <div className="col-span-2 flex flex-col gap-5">
           <div style={{ marginBottom: "32px" }}>
             <a href="/en-id/reschedule/flight" target="_blank" className="css-4rbku5">
               <div className="bg-primary w-full px-10 py-8 rounded-lg shadow-lg text-ghost-white grid grid-cols-2 overflow-hidden">

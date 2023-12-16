@@ -18,7 +18,7 @@ const Navbar = () => {
         </Link>
       </div>
       <div className="hidden md:flex space-x-4">
-        <Link href="/orders" className="py-1 text-primary">
+        <Link href="/my-booking" className="py-1 text-primary">
           Pesanan
         </Link>
         <Link href="/login" className="border text-gray-700 rounded px-5 py-1">
