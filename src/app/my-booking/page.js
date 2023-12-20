@@ -17,12 +17,15 @@ export default function Page() {
   }, []);
 
   const getData = async () => {
-    const { data } = await supabase.from("orders").select(
-      `*, 
+    const { data } = await supabase
+      .from("orders")
+      .select(
+        `*, 
       users(*),
       tickets(*)
       `
-    );
+      )
+      .order("id", { ascending: false });
 
     setHistories(data);
   };
@@ -134,7 +137,10 @@ export default function Page() {
                       </span>
                     </div>
                     <div class="">
-                      <span class="">{history.tickets.flight} * {history.tickets.departure_airport} - {history.tickets.arrival_airport}</span>
+                      <span class="">
+                        {history.tickets.flight} * {history.tickets.departure_airport} -{" "}
+                        {history.tickets.arrival_airport}
+                      </span>
                     </div>
                   </div>
                 </div>
