@@ -62,7 +62,7 @@ const Statistik = () => {
   return (
     <>
     <div >
-      <h3 className="text-center text-xl md:text-2xl mt-10 mb-5 font-semibold text-primary">Stastik Penerbangan Di indonesia</h3>  
+      <h3 className="text-center text-xl md:text-2xl mt-10 mb-5 font-semibold text-primary">Stasistik Penerbangan Di indonesia</h3>  
       <div className="px-3 ">
         <Bar {...config} />;
       </div>

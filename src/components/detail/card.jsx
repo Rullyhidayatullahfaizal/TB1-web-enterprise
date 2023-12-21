@@ -14,12 +14,13 @@ const CardDetail = () => {
 
   const getData = async () => {
     const { data } = await supabase
-      .from("tickets")
+      .from("flights")
       .select(
-        `departure,departure_airport,arrival,arrival_airport,flight,baggage,cabin,departure_at,arrival_estimation_at,stok,id`
+        `*`
       )
       .eq("departure", params.get("departure"))
-      .eq("arrival", params.get("arrival"));
+      .eq("arrival", params.get("arrival"))
+      // .eq("departure_at", params.get("departure_at"));
     console.log(data);
 
     setList(data);
@@ -36,6 +37,7 @@ const CardDetail = () => {
 
   return (
     <>
+
       {list &&
         list.map((row, index) => (
           <div
@@ -46,7 +48,7 @@ const CardDetail = () => {
               Penerbangan :<span className="text-primary">{row.flight}</span>
             </h3>
             <p className="text-sm my-2">
-              Keberangatan :{new Date(row.departure_at).toLocaleString()}
+              Keberangkatan :{new Date(row.departure_at).toLocaleString()}
             </p>
             <p className="text-sm">
               kedatangan :{" "}

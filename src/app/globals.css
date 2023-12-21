@@ -2,3 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+.teks {
+    color: #333;
+    background: white;
+    text-shadow: 4px 3px 0px #fff, 9px 8px 0px rgba(0,0,0,0.15);
+}

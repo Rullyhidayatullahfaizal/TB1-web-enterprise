@@ -3,9 +3,9 @@ import Image from "next/image";
 const WisataCard = () => {
   return (
     <>
-    <div className="px-3 pt-5">
+    <div className="px-3 ">
       <div>
-        <h2 className="text-center pt-7 font-semibold text-2xl mb-7 text-secondary">
+        <h2 className="text-center  font-semibold text-2xl mb-7 text-secondary">
           Rekomendasi Wisata Terbaik
         </h2>
       </div>
