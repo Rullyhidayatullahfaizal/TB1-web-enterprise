@@ -22,7 +22,7 @@ export default function Page() {
       .select(
         `*, 
       users(*),
-      tickets(*)
+      flights(*, departure_airport(*), airlines(*), arrival_airport(*))
       `
       )
       .order("id", { ascending: false });
@@ -82,7 +82,7 @@ export default function Page() {
           </div>
 
           {/* Tiket Aktif */}
-          <h1 className="text-2xl font-semibold text-gray-700 mb-2">Active E-tickets</h1>
+          <h1 className="text-2xl font-semibold text-gray-700 mb-2">Active E-flights</h1>
 
           {/* card Tiket Aktif */}
           {histories.length === 0 ? (
@@ -120,7 +120,7 @@ export default function Page() {
                     />
                     <div class="font-semibold leading-loose text-lg">
                       <span class="TiketCard_truncate__MIEmZ TiketCard_text_black__N5pYX HcPVsG_text HcPVsG_size_b1 HcPVsG_weight_bold">
-                        {history.tickets.departure} - {history.tickets.arrival}
+                        {history.flights.departure_airport.name} - {history.flights.arrival_airport.name}
                       </span>
                     </div>
                   </div>
@@ -132,14 +132,14 @@ export default function Page() {
                   <div class="font-light">
                     <div class="">
                       <span class="">
-                        {new Date(history.tickets.departure_at).toLocaleString()} -{" "}
-                        {new Date(history.tickets.arrival_estimation_at).toLocaleTimeString()}
+                        {new Date(history.flights.departure_at).toLocaleString()} -{" "}
+                        {new Date(history.flights.arrival_estimation_at).toLocaleTimeString()}
                       </span>
                     </div>
                     <div class="">
                       <span class="">
-                        {history.tickets.flight} * {history.tickets.departure_airport} -{" "}
-                        {history.tickets.arrival_airport}
+                        {history.flights.airlines.name} * {history.flights.departure_airport.name} -{" "}
+                        {history.flights.arrival_airport.name}
                       </span>
                     </div>
                   </div>
