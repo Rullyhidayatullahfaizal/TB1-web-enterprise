@@ -17,6 +17,8 @@ const Page = () => {
   const queryParams = useSearchParams();
   const departureDate = queryParams.get("departure-date");
   const [list, setList] = useState([]);
+  const [modalFlightDetails, setModalFlightDetails] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const getData = useCallback(async () => {
     let query = supabase.from("flights").select(
@@ -92,6 +94,16 @@ const Page = () => {
       </div>
     );
   };
+
+  const openModal = (selectedFlightDetails) => {
+    setIsModalOpen(true);
+    setModalFlightDetails(selectedFlightDetails);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
 
   return (
     <div className="flex gap-2 py-2 mx-16 md:mx-32 my-10">
@@ -233,7 +245,7 @@ const Page = () => {
               </div>
             ))}
         </div>
-        {/* <FlightDetailsModal isOpen={isModalOpen} onClose={closeModal} flightDetails={modalFlightDetails} /> */}
+        <FlightDetailsModal isOpen={isModalOpen} onClose={closeModal} flightDetails={modalFlightDetails} />
       </div>
     </div>
   );

@@ -1,11 +1,20 @@
+import { supabase } from "@/utils/supabase";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import Modal from "react-modal";
 
 const FlightDetailsModal = ({ isOpen, onClose, flightDetails }) => {
   const router = useRouter();
-  const handleBayar = () => {
-    router.push(`/booking/${flightDetails.id}`);
+  const handleBayar = async () => {
+    const userId = 1;
+
+    const result = await supabase
+      .from("orders")
+      .insert([{ ticket_id: flightDetails.id, user_id: userId, amount: 1, order_date: new Date(), stok: 1 }]);
+
+    if (result.error) return alert(result.error.message);
+
+    router.push("/my-booking");
   };
 
   return (
