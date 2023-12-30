@@ -8,14 +8,12 @@ import CustomDatePicker from "./date-picker";
 import { useCallback, useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { supabase } from "@/utils/supabase";
-import FlightDetailsModal from "./modal";
+import FlightModal from "./modal";
 
 const Page = () => {
   const queryParams = useSearchParams();
-  const departureDate = queryParams.get("departure-date");
   const [list, setList] = useState([]);
-  const [modalFlightDetails, setModalFlightDetails] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalState, setModalState] = useState({ isOpen: false, flight: null });
 
   const getData = useCallback(async () => {
     let query = supabase.from("flights_list").select();
@@ -50,6 +48,9 @@ const Page = () => {
   }, [getData]);
 
   const customNearDate = () => {
+    const departureDate = queryParams.get("departure_at");
+    if (!departureDate) throw new Error("something went wrong, invalid query");
+
     const departure = dayjs(departureDate);
 
     return (
@@ -64,13 +65,12 @@ const Page = () => {
     );
   };
 
-  const openModal = (selectedFlightDetails) => {
-    setIsModalOpen(true);
-    setModalFlightDetails(selectedFlightDetails);
+  const openModal = (flight) => {
+    setModalState({ flight, isOpen: true });
   };
 
   const closeModal = () => {
-    setIsModalOpen(false);
+    setModalState({ flight: null, isOpen: false });
   };
 
   return (
@@ -212,7 +212,7 @@ const Page = () => {
               </div>
             ))}
         </div>
-        <FlightDetailsModal isOpen={isModalOpen} onClose={closeModal} flightDetails={modalFlightDetails} />
+        <FlightModal isOpen={modalState.isOpen} onClose={closeModal} flight={modalState.flight} />
       </div>
     </div>
   );
