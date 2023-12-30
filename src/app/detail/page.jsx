@@ -74,7 +74,7 @@ const Page = () => {
   };
 
   return (
-    <div className="flex gap-2 py-2 mx-16 md:mx-32 my-10">
+    <div className="flex gap-2 py-2 mx-16 md:mx-32 my-10 justify-between">
       {/* Kotak 1: Daftar Penerbangan */}
       <div className="w-1/4">
         <PromoTabs />
@@ -82,7 +82,7 @@ const Page = () => {
       </div>
 
       {/* Kotak 2: Penumpang */}
-      <div className="flex flex-col w-3/4  rounded max-h-[48rem]  overflow-y-scroll scrollbar-none ">
+      <div className="flex flex-col grow rounded max-h-[48rem] ">
         {/* header */}
         <div className="relative overflow-hidden">
           <div className="relative flex-nowrap overflow-hidden -z-10">
@@ -197,12 +197,8 @@ const Page = () => {
                   {new Date(row.departure_at).toLocaleTimeString()} -{" "}
                   {new Date(row.arrival_estimation_at).toLocaleTimeString()}
                 </p>
-                {/* <p className="text-sm my-2">Keberangatan :{new Date(row.departure_at).toLocaleString()}</p>
-                <p className="text-sm">kedatangan : {new Date(row.arrival_estimation_at).toLocaleString()}</p> */}
                 <div className="flex justify-between items-center">
-                  <div>
-                    <p className="text-sm">Harga: Rp. {row.price.toLocaleString("id-ID")}</p>
-                  </div>
+                  <h6 className="text-sm">Harga: Rp. {row.price.toLocaleString("id-ID")}</h6>
                   <div className="flex gap-2">
                     <button className="bg-blue-500 px-4 py-1 rounded text-white" onClick={() => openModal(row)}>
                       Bayar
