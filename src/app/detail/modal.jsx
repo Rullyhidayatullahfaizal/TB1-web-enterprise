@@ -1,6 +1,6 @@
 import { supabase } from "@/utils/supabase";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React from "react";
 import Modal from "react-modal";
 
 const FlightDetailsModal = ({ isOpen, onClose, flightDetails }) => {
@@ -34,7 +34,7 @@ const FlightDetailsModal = ({ isOpen, onClose, flightDetails }) => {
       }}
     >
       <div>
-        <h2 className="text-xl font-bold mb-4 border-b pb-2 border-solid border-blue-200">Resume Flight:</h2>
+        <h2 className="text-xl font-bold mb-4 border-b pb-2 border-solid border-blue-200">Resume Flight : </h2>
         <div className="space-y-6 mb-5 flex flex-col ">
           <p className="">Pesawat : {flightDetails?.flight}</p>
           <p>Stock : {flightDetails?.stok}</p>

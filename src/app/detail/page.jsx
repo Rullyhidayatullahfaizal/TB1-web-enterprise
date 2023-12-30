@@ -1,17 +1,14 @@
 "use client";
 
-import CardDetail from "@/components/detail/card";
-import Image from "next/image";
 import DaftarPenerbangan from "./daftar-penerbangan";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import PromoTabs from "./promo-tabs";
-import { CalendarOutlined } from "@ant-design/icons";
 import CustomDatePicker from "./date-picker";
 import { useCallback, useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { supabase } from "@/utils/supabase";
-import FlightDetailsModal from "@/components/detail/pesan";
+import FlightDetailsModal from "./modal";
 
 const Page = () => {
   const queryParams = useSearchParams();
@@ -21,29 +18,16 @@ const Page = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const getData = useCallback(async () => {
-    let query = supabase.from("flights").select(
-      `departure_airport(*, city:city_id( name )),
-        departure_at,
-        arrival_estimation_at,
-        arrival_airport(*, city:city_id( name )),
-        airlines(*),
-        baggage,
-        cabin,
-        departure_at,
-        arrival_estimation_at,
-        stok,
-        price,
-        id`
-    );
+    let query = supabase.from("flights_list").select();
 
     const departureCity = queryParams.get("departure");
     if (departureCity) {
-      query.eq("departure_airport.city.name", departureCity);
+      query.eq("departure_city_name", departureCity);
     }
 
     const arrivalCity = queryParams.get("arrival");
     if (arrivalCity) {
-      query.eq("arrival_airport.city.name", arrivalCity);
+      query.eq("arrival_city_name", arrivalCity);
     }
 
     const departureAt = queryParams.get("departure_at");
@@ -53,27 +37,12 @@ const Page = () => {
 
     const { data, error } = await query;
 
-    // why does the "city.name" are null instead of the rows filtered
-    // manually filter
-    const filtered = data.filter((row) => {
-      if (departureAt) {
-        return (
-          row.arrival_airport.city !== null &&
-          row.departure_airport.city !== null &&
-          new Date(row.departure_at).getDate() === new Date(departureAt).getDate()
-        );
-      }
-
-      return row.arrival_airport.city !== null && row.departure_airport.city !== null;
-    });
-
     if (error && error.message) {
       alert(error.message);
       return router.back();
     }
 
-    console.log(filtered);
-    setList(filtered);
+    setList(data);
   }, [queryParams]);
 
   useEffect(() => {
@@ -103,7 +72,6 @@ const Page = () => {
   const closeModal = () => {
     setIsModalOpen(false);
   };
-
 
   return (
     <div className="flex gap-2 py-2 mx-16 md:mx-32 my-10">
@@ -217,14 +185,13 @@ const Page = () => {
         </div>
 
         <div className="flex-col w-full p-4">
-          {/* <CardDetail /> */}
           {list &&
             list.map((row, index) => (
               <div key={index} className="bg-white p-4 rounded-md shadow-md mb-4 border hover:border-cinereous">
-                <h3 className="tracking-wider font-semibold mb-2 capitalize">{row.airlines.name}</h3>
+                <h3 className="tracking-wider font-semibold mb-2 capitalize">{row.airlines_name}</h3>
                 <p className="text-xs text-gray-700 opacity-80 mb-2">
-                  {row.departure_airport.city.name} ({row.departure_airport.name}) - {row.arrival_airport.city.name} (
-                  {row.arrival_airport.name})
+                  {row.departure_city_name} ({row.departure_airport_name}) - {row.arrival_city_name} (
+                  {row.arrival_airport_name})
                 </p>
                 <p className="text-xs text-gray-700 opacity-80 mb-2">
                   {new Date(row.departure_at).toLocaleTimeString()} -{" "}
