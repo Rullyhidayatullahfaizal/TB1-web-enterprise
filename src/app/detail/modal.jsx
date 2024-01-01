@@ -1,5 +1,5 @@
 import { supabase } from "@/utils/supabase";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 // import Modal from "react-modal";
 import { Modal, Timeline } from "antd";
@@ -8,19 +8,13 @@ import dayjs from "dayjs";
 const FlightModal = ({ isOpen, onClose, flight }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(null);
+  const queryParams = useSearchParams();
 
   const handleBayar = async () => {
     setIsLoading(true);
 
-    const userId = 1;
-
-    const result = await supabase
-      .from("orders")
-      .insert([{ ticket_id: flight.id, user_id: userId, amount: 1, order_date: new Date(), stok: 1 }]);
-
-    if (result.error) return alert(result.error.message);
-
-    router.push("/my-booking");
+    console.log("book");
+    router.push(`/booking/${flight.id}?quantity=${queryParams.get("quantity")}`);
   };
 
   return (

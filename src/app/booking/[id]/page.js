@@ -1,64 +1,104 @@
 "use client";
 
 import { supabase } from "@/utils/supabase";
-import { useRouter, useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import { Button, Card, Form, Input, Select, Space } from "antd";
+import { useRouter, useParams, useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
 
 export default function Page() {
-  const [ticket, setTIcket] = useState({});
+  const [ticket, setTIcket] = useState(null);
   const params = useParams();
+  const queryParams = useSearchParams();
   const router = useRouter();
+  const passengerQuantity = queryParams.get("quantity");
+
+  const getData = useCallback(async () => {
+    const id = params["id"];
+
+    const { data } = await supabase.from("flights_list").select().eq("id", id).single();
+    if (!data) return alert("data not found");
+
+    setTIcket(data);
+  }, [params]);
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [getData]);
 
-  const getData = async () => {
-    const id = params["id"];
-    const { data } = await supabase.from("tickets").select(`*`).eq("id", id);
-    if (data.length === 0) return alert("data not found");
-
-    setTIcket(data[0]);
-  };
-
-  const handlePayment = async () => {
+  const handlePayment = async (value) => {
     const userId = 1;
 
-    const result = await supabase
-      .from("orders")
-      .insert([{ ticket_id: ticket.id, user_id: userId, amount: 1, order_date: new Date() }]);
-      
-    if (result.error) return alert(result.error.message);
+    // insert orders
+    // ga ada transaction di SDK supabase ??
+    const totalAmount = ticket.price * parseInt(passengerQuantity);
+    const ordersPayload = {
+      firstName: value.firstName,
+      lastName: value.lastName,
+      phone: value.mobileNumber,
+      email: value.email,
+      ticket_id: ticket.id,
+      user_id: userId,
+      quantity: parseInt(passengerQuantity),
+      total: totalAmount,
+      order_date: new Date(),
+    };
 
+    const { data: order, error } = await supabase
+      .from("orders")
+      .insert({ ...ordersPayload, meta: JSON.stringify(ordersPayload) })
+      .select()
+      .single();
+    if (error) return alert(error.message);
+
+    // insert passengers
+    const passengers = value.passengers.map((row) => ({
+      order_id: order.id,
+      ...row,
+    }));
+    const { error: passengerError } = await supabase.from("passengers").insert(passengers);
+    if (error) return alert(passengerError.message);
+
+    // if success, redirect
     router.push("/my-booking");
   };
 
-  if (!ticket || !ticket.id) return <>loading...</>;
+  if (!ticket) return <>loading...</>;
+  if (!passengerQuantity) return <>invalid query params</>;
+
+  console.log(passengerQuantity);
 
   return (
     <main className="flex flex-col px-4 py-8 bg-ghost-white min-h-screen text-raisin-black ">
-      {/* card */}
-      <div className="bg-white rounded-lg px-4 py-3 mx-auto">
-        <div className="flex flex-row gap-4">
-          <div className="flex items-center mb-6">
-            <div className="ml-4">
-              <p className="text-xl font-semibold">
-                Review & Pembayaran <span className="text-lg font-semibold">Tripmu ke {ticket.arrival}</span>
-              </p>
-              <p className="text-gray-500">Hampir selesai! Double-check semuanya sebelum konfirmasi bookingmu.</p>
-            </div>
-          </div>
+      <Form
+        labelCol={{
+          flex: "110px",
+        }}
+        labelAlign="left"
+        labelWrap
+        colon={false}
+        className="mx-auto max-w-2xl"
+        onFinish={handlePayment}
+      >
+        {/* card */}
+        <h5 className="text-lg mb-2 mt-5 font-semibold">
+          Review & Pembayaran <span className="text-lg font-semibold">Tripmu ke {ticket.arrival}</span>
+        </h5>
+        <Card>
+          <h6 className="mb-2">
+            <p className="text-gray-500">Hampir selesai! Double-check semuanya sebelum konfirmasi bookingmu.</p>
+          </h6>
 
-          <div className="flex flex-col space-y-6 mb-8">
+          <div className="flex flex-row gap-4">
             <div className="border rounded-lg px-4 py-2">
               <p className="text-lg font-semibold">Flight (GA-789)</p>
               <ul className="text-gray-500 mt-2">
                 <li>
-                  {ticket.departure} ({ticket.departure_airport}) - {ticket.arrival} ({ticket.arrival_airport})
+                  {ticket.departure_city_name} ({ticket.departure_airport_name}) - {ticket.arrival_city_name} (
+                  {ticket.arrival_airport_name})
                 </li>
                 <li>Departure : {new Date(ticket.departure_at).toLocaleString()}</li>
                 <li>Arrive : {new Date(ticket.arrival_estimation_at).toLocaleDateString()}</li>
-                {/* <li>1 hour 30 minutes</li> */}
               </ul>
             </div>
 
@@ -70,70 +110,169 @@ export default function Page() {
               </ul>
             </div>
           </div>
-        </div>
+        </Card>
 
         {/* form pembayaran */}
-        <h2 class="text-2xl font-semibold mb-6">Detail Kontak</h2>
+        <h5 className="text-lg mb-2 mt-5 font-semibold">Detail Kontak</h5>
 
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label class="block mb-2" for="fullname">
-              Full Name:
-            </label>
-            <input type="text" id="fullname" name="fullname" class="w-full px-4 py-2 border rounded-md" required />
-          </div>
+        {/* General Info */}
+        <Card>
+          <Space
+            style={{
+              display: "flex",
+              marginBottom: 8,
+              justifyContent: "space-between",
+            }}
+            align="baseline"
+          >
+            <Form.Item
+              name="firstName"
+              label="First mame"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your First name",
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              name="lastName"
+              label="Last name"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your Last name",
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+          </Space>
+          <Space
+            style={{
+              display: "flex",
+              marginBottom: 8,
+              justifyContent: "space-between",
+            }}
+            align="baseline"
+          >
+            <Form.Item
+              name="mobileNumber"
+              label="Mobile Number"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your Mobile phone number",
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              name="email"
+              label="Email"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your Email",
+                  email: true,
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+          </Space>
+        </Card>
 
-          <div>
-            <label class="block mb-2" for="email">
-              Email:
-            </label>
-            <input type="email" id="email" name="email" class="w-full px-4 py-2 border rounded-md" required />
-          </div>
+        {/* Passenger info */}
+        <h5 className="text-lg mb-2 mt-5 font-semibold">Traveler Details</h5>
+        <Card>
+          <h6>
+            Make sure that the passenger&apos;s name is exactly as written in the government issued ID/Passport/Driving
+            License. Avoid any mistake, because some airlines don&apos;t allow name corrections after booking.
+          </h6>
 
-          <div>
-            <label class="block mb-2" for="phone">
-              Phone Number:
-            </label>
-            <input type="tel" id="phone" name="phone" class="w-full px-4 py-2 border rounded-md" required />
-          </div>
+          <Form.List
+            name="passengers"
+            initialValue={[...new Array(parseInt(passengerQuantity))].map(() => ({
+              title: "",
+              firstName: "",
+              lastName: "",
+            }))}
+          >
+            {(fields) => (
+              <>
+                {fields.map(({ key, name, ...restField }, index) => (
+                  <Space
+                    key={key}
+                    style={{
+                      display: "flex",
+                      marginBottom: 8,
+                    }}
+                    align="baseline"
+                  >
+                    <p className="mr-2">Passengger {index + 1}</p>
+                    <Form.Item
+                      {...restField}
+                      name={[name, "title"]}
+                      rules={[
+                        {
+                          required: true,
+                          message: "Missing title",
+                        },
+                      ]}
+                    >
+                      <Select
+                        placeholder="Title"
+                        style={{ width: 120 }}
+                        options={[
+                          { value: "mr", label: "Mr." },
+                          { value: "mrs", label: "Mrs." },
+                          { value: "ms", label: "Ms." },
+                        ]}
+                      />
+                    </Form.Item>
+                    <Form.Item
+                      {...restField}
+                      name={[name, "firstName"]}
+                      rules={[
+                        {
+                          required: true,
+                          message: "Missing first name",
+                        },
+                      ]}
+                    >
+                      <Input placeholder="First Name" />
+                    </Form.Item>
+                    <Form.Item
+                      {...restField}
+                      name={[name, "lastName"]}
+                      rules={[
+                        {
+                          required: true,
+                          message: "Missing last name",
+                        },
+                      ]}
+                    >
+                      <Input placeholder="Last Name" />
+                    </Form.Item>
+                  </Space>
+                ))}
+              </>
+            )}
+          </Form.List>
+        </Card>
 
-          <div>
-            <label class="block mb-2" for="card">
-              Credit Card Number:
-            </label>
-            <input type="text" id="card" name="card" class="w-full px-4 py-2 border rounded-md" required />
-          </div>
-
-          <div>
-            <label class="block mb-2" for="expiration">
-              Expiration Date:
-            </label>
-            <input
-              type="text"
-              id="expiration"
-              name="expiration"
-              class="w-full px-4 py-2 border rounded-md"
-              placeholder="MM/YY"
-              required
-            />
-          </div>
-
-          <div>
-            <label class="block mb-2" for="cvv">
-              CVV:
-            </label>
-            <input type="text" id="cvv" name="cvv" class="w-full px-4 py-2 border rounded-md" required />
-          </div>
-        </div>
-
-        <button
-          type="submit"
-          class="mt-4 bg-primary text-white px-6 py-2 rounded-md hover:bg-blue-700 mb-2 float-right"
-          onClick={handlePayment}
+        <Button
+          htmlType="submit"
+          type="primary"
+          className="mt-4 bg-primary text-white hover:bg-blue-700 mb-2 float-right"
         >
           Complete Purchase
-        </button>
-      </div>
+        </Button>
+      </Form>
     </main>
   );
 }
