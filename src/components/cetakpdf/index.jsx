@@ -1,10 +1,18 @@
 "use client";
 
 import React from "react";
-import { Page, Text, View, Document, StyleSheet, PDFDownloadLink } from "@react-pdf/renderer";
+import {
+  Page,
+  Text,
+  View,
+  Document,
+  StyleSheet,
+  PDFDownloadLink,
+  PDFViewer,
+} from "@react-pdf/renderer";
 import PdfDocument from "../viewpdf/pdfcomponent";
 
-const Cetak = ({data}) => {
+const Cetak = ({ data }) => {
   const styles = StyleSheet.create({
     page: {
       flexDirection: "row",
@@ -20,13 +28,19 @@ const Cetak = ({data}) => {
   return (
     <>
       <div className="mt-2">
+        <PDFViewer 
+            width={900}
+            height={900}
+        >
+          <PdfDocument data={data} />
+        </PDFViewer>
         <PDFDownloadLink
           document={<PdfDocument data={data} />}
           fileName="document.pdf"
           className="bg-primary px-2 py-1 text-white rounded"
         >
           {({ blob, url, loading, error }) =>
-            loading  ? "Loading document..." : "Cetak!"
+            loading ? "Loading document..." : "Cetak!"
           }
         </PDFDownloadLink>
       </div>
