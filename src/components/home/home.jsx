@@ -1,5 +1,5 @@
 "use client";
-import { Select, Spin,DatePicker, Space } from "antd";
+import { Select, Spin, DatePicker, Space, InputNumber, Collapse } from "antd";
 import { useEffect, useState } from "react";
 import {
   AirplaneInFlight,
@@ -21,9 +21,17 @@ const Tiket = () => {
   const [pulang, setPulang] = useState();
   const router = useRouter();
 
+  const [passengerCounts, setPassengerCounts] = useState({
+    adults: 1,
+    teenagers: 0,
+    children: 0,
+  });
+
+  const { Panel } = Collapse;
+
   useEffect(() => {
-    console.log(pulang)
-  },[pulang])
+    console.log(pulang);
+  }, [pulang]);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -34,9 +42,8 @@ const Tiket = () => {
         const { data: dataTo, error: errorTo } = await supabase
           .from("cities")
           .select("name");
-          
 
-        if (errorFrom || errorTo ) {
+        if (errorFrom || errorTo) {
           console.error(
             "Error fetching data:",
             errorFrom?.message || errorTo?.message
@@ -50,7 +57,6 @@ const Tiket = () => {
         setOptionsTo(
           dataTo.map((item) => ({ value: item.name, label: item.name }))
         );
-      
       } catch (error) {
         console.error("Error fetching data:", error.message);
       }
@@ -59,14 +65,16 @@ const Tiket = () => {
     fetchData();
   }, []);
 
-  const handleSearch = async () => {
+  const handleSearch = async (event) => {
     event.preventDefault();
 
     const query = new URLSearchParams();
     query.append("departure", dari);
     query.append("arrival", ke);
-    query.append("departure_at", Keberangatan.format('YYYY-MM-DD')
-    );
+    query.append("departure_at", Keberangatan.format("YYYY-MM-DD"));
+    const { adults, teenagers, children } = passengerCounts;
+    const totalQuantity = adults + teenagers + children;
+    query.append("quantity", totalQuantity);
     router.push("/detail?" + query);
   };
   return (
@@ -207,6 +215,75 @@ const Tiket = () => {
                       className="px-2 py-1 w-full border rounded-md"
                     />
                   </div>
+                </div>
+
+                <div className="flex-grow">
+                  <Collapse defaultActiveKey={["passengerPanel"]} ghost>
+                    <Panel header="Jumlah Penumpang" key="passengerPanel">
+                      <div className="flex-grow">
+                        <label
+                          htmlFor="adults"
+                          className="block text-sm font-semibold text-gray-600"
+                        >
+                          Dewasa
+                        </label>
+                        <InputNumber
+                          id="adults"
+                          min={1}
+                          value={passengerCounts.adults}
+                          onChange={(value) =>
+                            setPassengerCounts((prevCounts) => ({
+                              ...prevCounts,
+                              adults: value,
+                            }))
+                          }
+                          className="w-full border rounded-md"
+                        />
+                      </div>
+
+                      <div className="flex-grow">
+                        <label
+                          htmlFor="teenagers"
+                          className="block text-sm font-semibold text-gray-600"
+                        >
+                          Remaja
+                        </label>
+                        <InputNumber
+                          id="teenagers"
+                          min={0}
+                          value={passengerCounts.teenagers}
+                          onChange={(value) =>
+                            setPassengerCounts((prevCounts) => ({
+                              ...prevCounts,
+                              teenagers: value,
+                            }))
+                          }
+                          className="w-full border rounded-md"
+                        />
+                      </div>
+
+                      <div className="flex-grow">
+                        <label
+                          htmlFor="children"
+                          className="block text-sm font-semibold text-gray-600"
+                        >
+                          Anak-anak
+                        </label>
+                        <InputNumber
+                          id="children"
+                          min={0}
+                          value={passengerCounts.children}
+                          onChange={(value) =>
+                            setPassengerCounts((prevCounts) => ({
+                              ...prevCounts,
+                              children: value,
+                            }))
+                          }
+                          className="w-full border rounded-md"
+                        />
+                      </div>
+                    </Panel>
+                  </Collapse>
                 </div>
               </div>
 
