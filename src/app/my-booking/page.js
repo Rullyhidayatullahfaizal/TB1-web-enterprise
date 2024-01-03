@@ -1,5 +1,6 @@
 "use client";
 
+import Cetak from "@/components/cetakpdf";
 import { supabase } from "@/utils/supabase";
 import { HistoryOutlined, UserOutlined } from "@ant-design/icons";
 import { Avatar, Button, Divider } from "antd";
@@ -141,6 +142,9 @@ export default function Page() {
                         {history.flights.airlines.name} * {history.flights.departure_airport.name} -{" "}
                         {history.flights.arrival_airport.name}
                       </span>
+                    </div>
+                    <div>
+                    {histories.length > 0 && <Cetak data={histories[0]} />}
                     </div>
                   </div>
                 </div>
