@@ -42,7 +42,7 @@
                     router.push('/login/')
 
             //.from(tabel target)
-                //    .insert('field', value)
+                //.insert('field', value)
 
 
         }

@@ -36,12 +36,12 @@ const LoginPage = () => {
                 .eq('password', password)
                 .single()
 
-
+            //fungsi if
                 if (!data) {
                 return alert ("password salah");   
                 
                 } 
-                
+            //    
                 
                 router.push("/home");
 
@@ -55,12 +55,7 @@ const LoginPage = () => {
         //alert("");
 
 
-        //samain kaya login bikin validasi keluarin pesan eror dan kalau berhasil pindahin ke login
-
-        //sembunyikan password
-        //created_at dibuat sesuai jam taken akun
-
-        //setListData(data)
+        
     }
 
     return (
