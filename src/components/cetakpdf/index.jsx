@@ -28,12 +28,12 @@ const Cetak = ({ data }) => {
   return (
     <>
       <div className="mt-2">
-        <PDFViewer 
+        {/* <PDFViewer 
             width={900}
             height={900}
         >
           <PdfDocument data={data} />
-        </PDFViewer>
+        </PDFViewer> */}
         <PDFDownloadLink
           document={<PdfDocument data={data} />}
           fileName="document.pdf"

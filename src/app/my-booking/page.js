@@ -23,7 +23,8 @@ export default function Page() {
       .select(
         `*, 
       users(*),
-      flights(*, departure_airport(*), airlines(*), arrival_airport(*))
+      flights(*,departure_airport(*), airlines(*), arrival_airport(*)),
+      passengers(*)
       `
       )
       .order("id", { ascending: false });
